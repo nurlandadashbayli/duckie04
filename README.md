@@ -9,6 +9,7 @@ The primary purpose of this fork is to add my solutions to the exercises provide
 ## What’s Included
 
 - **Exercise Solutions**: All my completed solutions to the exercises are located in the `solutions` directory. Each solution is documented with explanations and comments to help understand the approach taken.
+- **Challenge-Specific Documentation**: Each challenge in its respective folder contains a `README.md` file that provides necessary explanations about the solution and usage instructions.
 
 ## License
 
