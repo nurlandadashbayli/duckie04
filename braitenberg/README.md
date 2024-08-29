@@ -1,175 +1,130 @@
-<p align="center">
-<img src="./assets/images/dtlogo.png" alt="Duckietown Logo" width="50%">
-</p>
+# Braitenberg Challenge
+
+This project demonstrates the use of HSV (Hue, Saturation, Value) color space settings for image processing to help a Duckiebot detect and avoid obstacles in its path, specifically focusing on identifying ducks in the environment. This `README.md` provides a step-by-step guide to setting up and refining the robot's behavior to navigate around detected obstacles effectively.
 
-# **Learning Experience (LX): Braitenberg**
+## Table of Contents
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Steps](#steps)
+  - [1. Adjusting HSV Settings](#1-adjusting-hsv-settings)
+  - [2. Fine-Tuning Preprocessing](#2-fine-tuning-preprocessing)
+  - [3. Configuring Robot's Behavior](#3-configuring-robots-behavior)
+- [Running the Code](#running-the-code)
+- [Testing on a Physical Robot](#testing-on-a-physical-robot)
+- [Conclusion](#conclusion)
 
-# About these activities
+## Overview
 
-In this learning experience, you will create your own Braitenberg agent for the task of avoiding duckies on the road. 
-You'll first develop computer vision techniques that manipulate and filter images to highlight specific objects, 
-then utilize the filtered images to guide your agent.
+In this challenge, the Duckiebot is programmed to detect and avoid obstacles using HSV color space adjustments for image processing. The key steps in this process include adjusting HSV settings, fine-tuning image preprocessing, and configuring the robot's behavior through motor control settings.
 
-We will guide you through the process step by step as you progress through the activities in each notebook, and when 
-you're satisfied with your results, you can submit your work to evaluate how your agent compares to solutions from other developers.
+1. **Adjusting HSV Settings** - Filters the image to isolate the target object (a duck) by adjusting HSV color values.
+2. **Fine-Tuning Preprocessing** - Applies the HSV settings to the robot's vision system for optimal detection.
+3. **Configuring Robot's Behavior** - Determines how the robot should respond when an obstacle (duck) is detected.
 
-This learning experience is provided by the Duckietown team and can be run on Duckiebots. Visit us at the 
-[Duckietown Website](https://www.duckietown.com) for more learning materials, documentation, and demos.
+## Prerequisites
 
-For guided setup instructions, lecture content, and more related to this LX, see the [Self Driving Cars with 
-Duckietown course on EdX](https://learning.edx.org/course/course-v1:ETHx+DT-01x+3T2022/home).
+- Python 3.x
+- Jupyter Notebook
+- OpenCV
+- Duckietown ROS Packages
+- Basic understanding of image processing and robot control systems
 
-## Grading challenge
+## Setup
 
-Your submissions will be sent to the [`lx22-BV1`][challenge] challenge.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/dadashbaylinurlan/duckie04.git
+   cd braitenberg
+   ```
 
-[challenge]: https://challenges.duckietown.org/v4/humans/challenges/lx22-BV1
+2. **Ensure your Duckiebot is properly configured** with ROS and all necessary Duckietown packages.
 
+## Steps
 
-# Instructions
+### 1. Adjusting HSV Settings
 
-**NOTE:** All commands below are intended to be executed from the root directory of this exercise (i.e., the directory containing this README).
+The first step involves adjusting HSV settings for image processing to help the robot detect obstacles effectively. HSV color space is beneficial as it separates color information from intensity, making it easier to detect objects under varying lighting conditions.
 
+- **Procedure**:
+  - Start with an image of a duck and adjust the HSV values using the `braitenberg02.ipynb` notebook.
+  - Fine-tune the HSV parameters to filter out the background and isolate the duck.
 
-## 1. Make sure your exercise is up-to-date
+- **Code Snippet**:
+  ```python
+  # Example from braitenberg02.ipynb
+  def adjust_hsv(image):
+      hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+      mask = cv2.inRange(hsv, lower_bound, upper_bound)
+      result = cv2.bitwise_and(image, image, mask=mask)
+      return result
+  ```
 
-Update your exercise definition and instructions,
+### 2. Fine-Tuning Preprocessing
 
-    git pull upstream mooc2022
+Once the optimal HSV values are determined, adjust these parameters in the preprocessing file to apply them to the robot's vision system.
 
-**NOTE:** to pull from upstream, you need to have completed the instructions in the [duckietown-lx repository README](https://github.com/duckietown/duckietown-lx/blob/mooc2022/README.md) to *fork* this repository.
+- **Procedure**:
+  - Use the `preprocessing.py` script to set the optimal HSV values for detecting ducks.
+  - Fine-tune the preprocessing steps to ensure the robot can effectively filter out unnecessary elements and focus on detecting ducks.
 
+- **Code Snippet**:
+  ```python
+  # Example from preprocessing.py
+  def preprocess_image(image):
+      hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+      mask = cv2.inRange(hsv, optimal_lower_bound, optimal_upper_bound)
+      processed_image = cv2.bitwise_and(image, image, mask=mask)
+      return processed_image
+  ```
 
-## 2. Make sure your system is up-to-date
+### 3. Configuring Robot's Behavior
 
-- 💻 Always make sure your Duckietown Shell is updated to the latest version. See [installation instructions](https://github.com/duckietown/duckietown-shell)
+After preprocessing is fine-tuned, the next step is to configure how the robot's motors respond to the processed images, dictating how the robot reacts when a duck is detected.
 
-- 💻 Update the shell commands: `dts update`
+- **Procedure**:
+  - Adjust motor response settings in the `connections.py` file.
+  - Experiment with different configurations to ensure smooth navigation around detected obstacles.
 
-- 💻 Update your laptop/desktop: `dts desktop update`
+- **Code Snippet**:
+  ```python
+  # Example from connections.py
+  def control_motors(sensor_input):
+      if sensor_input == "duck_detected":
+          left_motor_speed = calculate_speed_left()
+          right_motor_speed = calculate_speed_right()
+          apply_motor_control(left_motor_speed, right_motor_speed)
+  ```
 
-- 🚙 Update your Duckiebot: `dts duckiebot update ROBOTNAME` (where `ROBOTNAME` is the name of your Duckiebot chosen during the initialization procedure.)
+## Running the Code
 
+To run the code, follow the instructions in the Jupyter Notebooks to adjust HSV settings and preprocess images. Then, configure the robot's behavior using the provided Python scripts.
 
-## 3. Work on the exercise
+## Testing on a Physical Robot
 
-### Launch the code editor
+You can test the Braitenberg challenge on a Duckiebot using the following commands:
 
-Open the code editor by running the following command,
+1. **Run everything on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT
+   ```
 
-```
-dts code editor
-```
+   This command runs both the drivers and the agent directly on the Duckiebot.
 
-Wait for a URL to appear on the terminal, then click on it or copy-paste it in the address bar
-of your browser to access the code editor. The first thing you will see in the code editor is
-this same document, you can continue there.
+2. **Run the agent locally, drivers on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT --local
+   ```
 
+   This command runs the Duckiebot’s drivers on the robot while executing the code on your local machine (laptop).
 
-### Walkthrough of notebooks
+Ensure to replace `YOUR_DUCKIEBOT` with the name of your Duckiebot.
 
-**NOTE**: You should be reading this from inside the code editor in your browser.
+## Conclusion
 
-Inside the code editor, use the navigator sidebar on the left-hand side to navigate to the
-`notebooks` directory and open the first notebook.
+By following these steps, the Duckiebot can detect and avoid obstacles using HSV color space adjustments and image processing techniques. Although initial trials showed effective detection of ducks, further refinements are needed to ensure smooth and continuous navigation around obstacles.
 
-Follow the instructions on the notebook and work through the notebooks in sequence.
 
+---
 
-### 💻 Testing in simulation
-
-To test in simulation, use the command
-
-    $ dts code workbench --sim
-
-There will be two URLs popping up to open in your browser: one is the direct view of the
-simulated environment. The other is VNC and only useful for some exercises, follow the instructions
-in the notebooks to see if you need to access VNC.
-
-This simulation test is just that, a test. Don't trust it fully. If you want a more accurate
-metric of performance, continue reading to the `Perform local evaluation` section below.
-
-### ℹ️️ Check Robot Compatibility
-
-While we try our best to support running these exercises on all versions of the Duckiebot, some activities require special hardware and
-are only supported on specific robots. Please use this section to ensure the compatibility of the exercise and your
-robot.
-
-The support matrix of this exercise is as follows:
-
-| Duckiebot Type   	                                                                                | Configuration 	 | Support Level   	    |
-|---------------------------------------------------------------------------------------------------|-----------------|----------------------|
-| [DB21-J4](https://get.duckietown.com/products/duckiebot-db21?variant=41543707099311)            	 | Jetson 4GB    	 | ✔️ Full Support    	 |
-| [DB21-J2](https://get.duckietown.com/products/duckiebot-db21?variant=40700056830127)            	 | Jetson 2GB    	 | ✔️ Full Support 	    |
-
-
-### 🚙 Testing on a physical robot
-
-You can test your agent on the robot using the command,
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT
-
-This is the modality "everything runs on the robot".
-
-You can also test using
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT --local 
-
-This is the modality "drivers running on the robot, agent runs on the laptop."
-
-
-### 📽 Perform local evaluation
-
-We suggest you evaluate your work locally before submitting your solution.
-You can do so by running the following command,
-
-    dts code evaluate
-
-This should take a few minutes.
-This is not supposed to be an interactive process: just let it run, and when you return,
-you will find the output in a folder, including videos, and trajectories, and all the statistics
-you would usually find on the website.
-
-
-### 📬 Submit your solution
-
-When you are ready to submit your homework, use the following command,
-
-    dts code submit
-
-This will package all your code and send it to the Duckietown servers for evaluation.
-
-
-## Troubleshooting
-
-
-If an error of this form occurs
-
-```bash
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 76, in dt_challenges_cli_main
-    dt_challenges_cli_main_(args=args, sections=sections, main_cmd="challenges")
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 203, in dt_challenges_cli_main_
-    f(rest, environment)
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli_submit.py", line 165, in dt_challenges_cli_submit
-    br = submission_build(
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cmd_submit_build.py", line 41, in submission_build
-    raise ZException(msg, available=list(credentials))
-zuper_commons.types.exceptions.ZException: Credentials for registry docker.io not available
-available:
-```
-
-you need to log into docker using `dts`. Use this command:
-
-```
-dts challenges config --docker-username <USERNAME> --docker-password <PASSWORD>
-```
-
-
-## Retire obsolete submissions
-
-Note that you can "retire" submissions that you know are wrong.
-You can do this through [the Duckietown Challenges website](https://challenges.duckietown.org/).
-
-To do so, login using your token, then find the submission you want to retire from the list of submission
-in your user profile page. Use the button "retire" to the right of the submission record line.
+**Author**: Nurlan Dadashbayli
