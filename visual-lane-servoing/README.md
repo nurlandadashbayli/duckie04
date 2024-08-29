@@ -34,7 +34,7 @@ In this project, the Duckiebot is programmed to move accurately within a designa
 
 ## Setup
 
-1. **Clone the repository** (if this is part of a repository):
+1. **Clone the repository**
    ```bash
    git clone https://github.com/dadashbaylinurlan/duckie04.git
    cd visual-lane-servoing
