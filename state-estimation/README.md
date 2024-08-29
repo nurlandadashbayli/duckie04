@@ -117,7 +117,6 @@ Ensure to replace `YOUR_DUCKIEBOT` with the name of your Duckiebot.
 
 By following these steps, the Duckiebot can estimate its position on the ground more accurately using a histogram filter that combines prediction and update steps. This approach is crucial for autonomous robots as it helps them understand and adapt to their surroundings, whether in a controlled simulation or a real-world environment.
 
-Feel free to explore the code and modify parameters to improve performance or adapt to different environments.
 
 ---
 
