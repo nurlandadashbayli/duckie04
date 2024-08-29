@@ -1,188 +1,132 @@
-<p align="center">
-<img src="./assets/images/dtlogo.png" alt="Duckietown Logo" width="50%">
-</p>
+# Duckietown Modeling and Control Challenge
+
+This project involves modeling and controlling a Duckiebot to navigate its environment effectively. The process includes calibrating the wheels, tracking the robot's position using odometry, and fine-tuning a PID controller for precise movement control. This `README.md` file provides a comprehensive guide to the steps taken to achieve these tasks.
+
+## Table of Contents
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Steps](#steps)
+  - [1. Wheel Calibration](#1-wheel-calibration)
+  - [2. Odometry](#2-odometry)
+  - [3. PID Controller](#3-pid-controller)
+- [Running the Code](#running-the-code)
+- [Testing on a Physical Robot](#testing-on-a-physical-robot)
+- [Conclusion](#conclusion)
 
-# **Learning Experience (LX): Modeling and Control (ModCon)**
+## Overview
 
-# About these activities
+In this challenge, the Duckiebot is programmed to navigate its environment using a combination of wheel calibration, odometry, and a PID controller. The key steps in this process are:
 
-In this learning experience, you will progress through a set of activities on the topic of the modeling and control 
-(`ModCon`) of a differential drive robot. This includes calculating odometry, visualizing the estimation of your 
-agent's pose in the world, and tuning your own PID controller.
+1. **Wheel Calibration** - Ensures the Duckiebot drives straight and minimizes slippage.
+2. **Odometry** - Tracks the Duckiebot’s position and orientation in real-time.
+3. **PID Controller** - Adjusts the Duckiebot's speed and direction to follow a desired path and avoid collisions.
 
-This learning experience is provided by the Duckietown team and can be run on Duckiebots. Visit us at the 
-[Duckietown Website](https://www.duckietown.com) for more learning materials, documentation, and demos.
+## Prerequisites
 
-For guided setup instructions, lecture content, and more related to this LX, see the [Self Driving Cars with 
-Duckietown course on EdX](https://learning.edx.org/course/course-v1:ETHx+DT-01x+3T2022/home).
+- Python 3.x
+- Jupyter Notebook
+- Duckietown ROS Packages
+- Basic understanding of robotics and control systems
 
-# 💻 🚙 About this learning experience
+## Setup
 
-We include `activities` and one `exercise`.
+1. **Clone the repository** (if this is part of a repository):
+   ```bash
+   git clone https://github.com/dadashbaylinurlan/duckie04.git
+   cd modcon
+   ```
 
-- Activies are designed as guided tutorials and solutions are publicly available. 
+2. **Ensure your Duckiebot is properly configured** with ROS and all necessary Duckietown packages.
 
-- Exercises are designed as "do it yourself", and solutions are not publicly available. 
+## Steps
 
-  - Exercises have associated "challenges", to which solutions (agents) are submitted for evaluation. Duckietown challenges are available on our [challenges server][challenges-server].
+### 1. Wheel Calibration
 
-[challenges-server]: https://challenges.duckietown.org/v4/humans/challenges
+Wheel calibration is the first step to ensure that the Duckiebot drives straight and reduces any bias or slippage. Calibration involves adjusting the motor parameters so that both wheels move synchronously.
 
-## Evaluation
+- **Procedure**:
+  - Use the `wheels_calibration.ipynb` notebook to run the calibration routine.
+  - Observe the Duckiebot’s initial biased movement (e.g., pulling to the right).
+  - Adjust wheel speed parameters according to the calibration instructions from Duckietown.
+  - Re-run the calibration to check improvements.
 
-Submissions to the exercise of this learning experience will be sent to the [`lx22-modcon`][challenge] challenge.
+- **Code Snippet**:
+  ```python
+  # Example from wheels_calibration.ipynb
+  def calibrate_wheels():
+      # Adjust wheel speeds
+      left_wheel_speed = adjust_speed(left_initial_speed)
+      right_wheel_speed = adjust_speed(right_initial_speed)
+      apply_calibration(left_wheel_speed, right_wheel_speed)
+  ```
 
-You can verify the performance metrics of your submitted agents on the [Challenge Leaderboard][leaderboard]. 
+### 2. Odometry
 
-Evaluations are computationally intensive and performed on a best-effort basis. We deprioritize evaluating submissions from users that have already submitted in favor of those who have not. 
+Odometry is used to track the Duckiebot’s position and orientation in real-time, providing feedback for navigation and control.
 
-To ensure priority evaluation services, please reach out to Duckietown at info@duckietown.com. 
+- **Procedure**:
+  - Manually drive the Duckiebot using the keyboard while tracking its position.
+  - Use the `odometry_activity.ipynb` notebook to visualize the Duckiebot’s movement and update its position in real-time.
+  - Ensure that the odometry data accurately reflects the Duckiebot’s movements.
 
-[challenge]: https://challenges.duckietown.org/v4/humans/challenges/lx22-modcon
-[leaderboard]: https://challenges.duckietown.org/v4/humans/challenges/lx22-modcon/leaderboard
+- **Code Snippet**:
+  ```python
+  # Example from odometry_activity.ipynb
+  def update_odometry():
+      current_position = get_current_position()
+      update_position(current_position)
+      display_position_on_map(current_position)
+  ```
 
+### 3. PID Controller
 
-# Instructions
+The PID controller is designed to adjust the Duckiebot's speed and direction dynamically, helping it follow a designated path and avoid obstacles.
 
-**NOTE:** All commands below are intended to be executed from the root directory of this exercise (i.e., the directory containing this `README`).
+- **Procedure**:
+  - Implement the PID control logic in `pid_controller.py` to adjust the robot's velocity and heading.
+  - Test the Duckiebot’s response to various PID parameter settings.
+  - Fine-tune the PID parameters to balance movement accuracy and effective tracking.
+  - Resolve any issues such as spinning in place or inaccurate tracking by adjusting PID values.
 
+- **Code Snippet**:
+  ```python
+  # Example from pid_controller.py
+  def pid_control(target_velocity, target_heading):
+      error = compute_error(current_state, target_state)
+      control_signal = compute_pid(error)
+      apply_control_signal(control_signal)
+  ```
 
-## 1. Make sure your exercise is up-to-date
+## Running the Code
 
-Update your exercise definition and instructions,
+To run the code, follow the instructions in the Jupyter Notebooks for calibration and odometry, and then test the PID controller using the provided Python scripts.
 
-    git pull upstream mooc2022
+## Testing on a Physical Robot
 
-**NOTE:** to pull from upstream, you need to have completed the instructions in the [duckietown-lx repository README](https://github.com/duckietown/duckietown-lx/blob/mooc2022/README.md) to *fork* this repository.
+You can test your agent on the robot using the following commands:
 
+1. **Run everything on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT
+   ```
 
-## 2. Make sure your system is up-to-date
+   This command runs both the drivers and the agent directly on the Duckiebot.
 
-- 💻 Always make sure your Duckietown Shell is updated to the latest version. See [installation instructions](https://github.com/duckietown/duckietown-shell)
+2. **Run the agent locally, drivers on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT --local
+   ```
 
-- 💻 Update the shell commands: `dts update`
+   This command runs the Duckiebot’s drivers on the robot while executing the agent code on your local machine (laptop).
 
-- 💻 Update your laptop/desktop: `dts desktop update`
+Ensure to replace `YOUR_DUCKIEBOT` with the name of your Duckiebot.
 
-- 🚙 Update your Duckiebot: `dts duckiebot update ROBOTNAME` (where `ROBOTNAME` is the name of your Duckiebot chosen during the initialization procedure.)
+## Conclusion
 
+By following these steps, the Duckiebot can effectively navigate its environment using calibrated wheel settings, accurate odometry for position tracking, and a fine-tuned PID controller for dynamic movement control. Adjusting the PID parameters is crucial for balancing the trade-offs between movement accuracy and tracking reliability.
 
-## 3. Work on the exercise
 
-### Launch the code editor
+---
 
-Open the code editor by running the following command,
-
-```
-dts code editor
-```
-
-Wait for a URL to appear on the terminal, then click on it or copy-paste it in the address bar
-of your browser to access the code editor. The first thing you will see in the code editor is
-this same document, you can continue there.
-
-
-### Walkthrough of notebooks
-
-**NOTE**: You should be reading this from inside the code editor in your browser.
-
-Inside the code editor, use the navigator sidebar on the left-hand side to navigate to the
-`notebooks` directory and open the first notebook.
-
-Follow the instructions on the notebook and work through the notebooks in sequence.
-
-
-### 💻 Testing in simulation
-
-To test in simulation, use the command
-
-    $ dts code workbench --sim
-
-There will be two URLs popping up to open in your browser: one is the direct view of the
-simulated environment. The other is VNC and only useful for some exercises, follow the instructions
-in the notebooks to see if you need to access VNC.
-
-This simulation test is just that, a test. Don't trust it fully. If you want a more accurate
-metric of performance, continue reading to the `Perform local evaluation` section below.
-
-
-### ℹ️️ Check Robot Compatibility
-
-While we try our best to support running these exercises on all versions of the Duckiebot, some activities require special hardware and
-are only supported on specific robots. Please use this section to ensure the compatibility of the exercise and your
-robot.
-
-The support matrix of this exercise is as follows:
-
-| Duckiebot Type   	                                                                                | Configuration 	 | Support Level   	    |
-|---------------------------------------------------------------------------------------------------|-----------------|----------------------|
-| [DB21-J4](https://get.duckietown.com/products/duckiebot-db21?variant=41543707099311)            	 | Jetson 4GB    	 | ✔️ Full Support    	 |
-| [DB21-J2](https://get.duckietown.com/products/duckiebot-db21?variant=40700056830127)            	 | Jetson 2GB    	 | ✔️ Full Support 	    |
-
-
-
-### 🚙 Testing on a physical robot
-
-You can test your agent on the robot using the command,
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT
-
-In this mode "everything runs on the robot".
-
-You can also test using
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT --local 
-
-In this mode instead "drivers run on the robot, agent runs on the laptop.". When testing like this you should expect reduced latency from computation (your computer is likely more powerful than the Duckiebot's onboard computer) but increased latency from network (as data and commands need to be shipped back and forth). Generally speaking the performance of this mode should be better than runnning the agent on the robot for computationally intensive agents, but this mode suffers from environmental factors (network quality and use).
-
-
-### 📽 Perform local evaluation
-
-We suggest you evaluate your work locally before submitting your solution.
-You can do so by running the following command,
-
-    dts code evaluate
-
-This will take a few minutes and it is not supposed to be an interactive process: just let it run, and when you return you will find the output in a folder, including videos, and trajectories, and all the statistics you would usually find on the website.
-
-
-### 📬 Submit your solution
-
-When you are ready to submit your agent solution, use the following command:
-
-    dts code submit
-
-This will package all your code and send it to the Duckietown [challenges server][challenges-server] for evaluation.
-
-
-## Troubleshooting
-
-
-If an error of this form occurs
-
-```bash
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 76, in dt_challenges_cli_main
-    dt_challenges_cli_main_(args=args, sections=sections, main_cmd="challenges")
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 203, in dt_challenges_cli_main_
-    f(rest, environment)
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli_submit.py", line 165, in dt_challenges_cli_submit
-    br = submission_build(
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cmd_submit_build.py", line 41, in submission_build
-    raise ZException(msg, available=list(credentials))
-zuper_commons.types.exceptions.ZException: Credentials for registry docker.io not available
-available:
-```
-
-you need to log into docker using `dts`. Use this command:
-
-```
-dts challenges config --docker-username <USERNAME> --docker-password <PASSWORD>
-```
-
-
-## Retire obsolete submissions
-
-Note that you can "retire" submissions that you know are wrong.
-
-You can do so by logging in on the [challenges server][challenges-server] using your token, finding the submission you want to retire from the list of submission in your user profile page, and using the "retire" button to the right of the submission record line.
+**Author**: Nurlan Dadashbayli

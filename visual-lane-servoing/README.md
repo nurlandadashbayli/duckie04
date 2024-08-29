@@ -1,178 +1,149 @@
-<p align="center">
-<img src="./assets/images/dtlogo.png" alt="Duckietown Logo" width="50%">
-</p>
+# Duckietown Visual Lane Servoing Task
 
-# **Learning Experience (LX): Visual Lane Servoing**
+This project demonstrates a visual lane servoing task for a Duckiebot in the Duckietown environment. The Duckiebot uses its camera to navigate accurately within a designated path by employing a series of calibrations and image processing techniques. This `README.md` will guide you through the steps taken to achieve successful lane following using visual servoing.
 
-# About these activities
+## Table of Contents
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Steps](#steps)
+  - [1. Intrinsic Camera Calibration](#1-intrinsic-camera-calibration)
+  - [2. Extrinsic Camera Calibration](#2-extrinsic-camera-calibration)
+  - [3. Image Filtering](#3-image-filtering)
+  - [4. Visual Servoing](#4-visual-servoing)
+- [Running the Code](#running-the-code)
+- [Testing on a Physical Robot](#testing-on-a-physical-robot)
+- [Conclusion](#conclusion)
+
+## Overview
+
+In this project, the Duckiebot is programmed to move accurately within a designated path using visual feedback. The process involves several key steps:
+
+1. **Intrinsic Camera Calibration** - Corrects lens distortions to ensure accurate environmental perception.
+2. **Extrinsic Camera Calibration** - Aligns the camera's view with the robot's perspective for accurate navigation.
+3. **Image Filtering** - Processes images to highlight important details and remove noise.
+4. **Visual Servoing** - Allows the Duckiebot to adjust its movements in real-time based on visual input.
+
+## Prerequisites
 
-In this learning experience, we will develop image processing techniques necessary for **visual lane servoing** which 
-allows controlling your Duckiebot to drive within lane markings.
+- Python 3.x
+- Jupyter Notebook
+- OpenCV
+- Duckietown ROS Packages
+- Camera Calibration patterns (Checkerboard or other suitable patterns)
 
-This learning experience is provided by the Duckietown team and can be run on Duckiebots. Visit us at the 
-[Duckietown Website](https://www.duckietown.com) for more learning materials, documentation, and demos.
+## Setup
 
-For guided setup instructions, lecture content, and more related to this LX, see the [Self Driving Cars with 
-Duckietown course on EdX](https://learning.edx.org/course/course-v1:ETHx+DT-01x+3T2022/home).
+1. **Clone the repository** (if this is part of a repository):
+   ```bash
+   git clone https://github.com/dadashbaylinurlan/duckie04.git
+   cd visual-lane-servoing
+   ```
 
+2. **Ensure your Duckiebot is properly configured** with ROS and all necessary Duckietown packages.
 
-## Grading challenge
+## Steps
 
-Your submissions will be sent to the [`lx22-visservoing`][challenge] challenge.
+### 1. Intrinsic Camera Calibration
 
-You can verify the scores of your submissions on the [Challenge Leaderboard][leaderboard] after your submission is evaluated.
+Intrinsic calibration corrects lens distortions, ensuring the Duckiebot can accurately interpret its environment. This step involves moving the robot around a calibration pattern and recording images to adjust for any camera distortions.
 
-[challenge]: https://challenges.duckietown.org/v4/humans/challenges/lx22-visservoing
-[leaderboard]: https://challenges.duckietown.org/v4/humans/challenges/lx22-visservoing/leaderboard
+- **Procedure**:
+  - Move the Duckiebot in front of a calibration pattern (checkerboard).
+  - Capture images from various angles and distances.
+  - Use the `camera_calibration.ipynb` notebook to process these images and compute the intrinsic parameters.
+  - Save the calibration file for future use.
 
+- **Code Snippet**:
+  ```python
+  # Example from camera_calibration.ipynb
+  # Perform intrinsic calibration
+  intrinsic_parameters = calibrate_camera(images)
+  save_calibration(intrinsic_parameters, 'intrinsic_calibration.yaml')
+  ```
 
+### 2. Extrinsic Camera Calibration
 
-# Instructions
+Extrinsic calibration aligns the camera's position and orientation with the Duckiebot's body, ensuring accurate perception of the environment from the robot's perspective.
 
-**NOTE:** All commands below are intended to be executed from the root directory of this exercise (i.e., the directory containing this README).
+- **Procedure**:
+  - Position the Duckiebot on designated arrows in the Duckietown setup.
+  - Use the `camera_calibration.ipynb` notebook to calibrate the camera relative to the robot's position.
+  - Save the extrinsic calibration data.
 
+- **Code Snippet**:
+  ```python
+  # Example from camera_calibration.ipynb
+  # Perform extrinsic calibration
+  extrinsic_parameters = calibrate_extrinsic(robot_position, camera_position)
+  save_calibration(extrinsic_parameters, 'extrinsic_calibration.yaml')
+  ```
 
-## 1. Make sure your exercise is up-to-date
+### 3. Image Filtering
 
-Update your exercise definition and instructions,
+Image filtering is essential for removing noise and highlighting the lane markings that the Duckiebot needs to follow. This process involves using filters to isolate the yellow and white lane lines.
 
-    git pull upstream mooc2022
+- **Procedure**:
+  - Capture a test image from the Duckiebot's camera.
+  - Apply filtering techniques such as Gaussian blur, color thresholding, and edge detection.
+  - Use the `image_filtering.ipynb` notebook to adjust parameters and visualize results.
 
-**NOTE:** to pull from upstream, you need to have completed the instructions in the [duckietown-lx repository README](https://github.com/duckietown/duckietown-lx/blob/mooc2022/README.md) to *fork* this repository.
+- **Code Snippet**:
+  ```python
+  # Example from image_filtering.ipynb
+  filtered_image = apply_filters(test_image)
+  display_image(filtered_image)
+  ```
 
+### 4. Visual Servoing
 
-## 2. Make sure your system is up-to-date
+In the visual servoing phase, the Duckiebot uses real-time visual feedback to adjust its path. The calibrated camera and filtered images guide the Duckiebot to stay within the lane markings.
 
-- 💻 Always make sure your Duckietown Shell is updated to the latest version. See [installation instructions](https://github.com/duckietown/duckietown-shell)
+- **Procedure**:
+  - Combine intrinsic and extrinsic calibration results with the filtered images.
+  - Implement control logic in the Python script (`visual_servoing_activity.py`) to adjust the Duckiebot’s steering and speed.
+  - Run the visual servoing script to observe the Duckiebot navigating the path.
 
-- 💻 Update the shell commands: `dts update`
+- **Code Snippet**:
+  ```python
+  # Example from visual_servoing_activity.py
+  def main():
+      initialize_robot()
+      while True:
+          image = capture_image()
+          processed_image = process_image(image)
+          control_commands = compute_control(processed_image)
+          apply_control(control_commands)
+  ```
 
-- 💻 Update your laptop/desktop: `dts desktop update`
+## Running the Code
 
-- 🚙 Update your Duckiebot: `dts duckiebot update ROBOTNAME` (where `ROBOTNAME` is the name of your Duckiebot chosen during the initialization procedure.)
+To run the code, follow the steps in the Jupyter Notebooks and then use the commands provided in the next section to test your Duckiebot.
 
+## Testing on a Physical Robot
 
-## 3. Work on the exercise
+You can test your agent on the robot using the following commands:
 
-### Launch the code editor
+1. **Run everything on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT
+   ```
 
-Open the code editor by running the following command,
+   This command runs both the drivers and the agent directly on the Duckiebot.
 
-```
-dts code editor
-```
+2. **Run the agent locally, drivers on the robot**:
+   ```bash
+   dts code workbench --duckiebot YOUR_DUCKIEBOT --local
+   ```
 
-Wait for a URL to appear on the terminal, then click on it or copy-paste it in the address bar
-of your browser to access the code editor. The first thing you will see in the code editor is
-this same document, you can continue there.
+   This command runs the Duckiebot’s drivers on the robot while executing the agent code on your local machine (laptop).
 
+Ensure to replace `YOUR_DUCKIEBOT` with the name of your Duckiebot.
 
-### Walkthrough of notebooks
+## Conclusion
 
-**NOTE**: You should be reading this from inside the code editor in your browser.
+By following these steps, the Duckiebot can navigate a designated path using visual servoing techniques, combining camera calibration and image processing to interpret and respond to its environment in real-time. 
 
-Inside the code editor, use the navigator sidebar on the left-hand side to navigate to the
-`notebooks` directory and open the first notebook.
+---
 
-Follow the instructions on the notebook and work through the notebooks in sequence.
-
-
-### 💻 Testing in simulation
-
-To test in simulation, use the command
-
-    $ dts code workbench --sim
-
-There will be two URLs popping up to open in your browser: one is the direct view of the
-simulated environment. The other is VNC and only useful for some exercises, follow the instructions
-in the notebooks to see if you need to access VNC.
-
-This simulation test is just that, a test. Don't trust it fully. If you want a more accurate
-metric of performance, continue reading to the `Perform local evaluation` section below.
-
-
-### ℹ️️ Check Robot Compatibility
-
-While we try our best to support running these exercises on all versions of the Duckiebot, some activities require special hardware and
-are only supported on specific robots. Please use this section to ensure the compatibility of the exercise and your
-robot.
-
-The support matrix of this exercise is as follows:
-
-| Duckiebot Type   	                                                                                | Configuration 	 | Support Level   	    |
-|---------------------------------------------------------------------------------------------------|-----------------|----------------------|
-| [DB21-J4](https://get.duckietown.com/products/duckiebot-db21?variant=41543707099311)            	 | Jetson 4GB    	 | ✔️ Full Support    	 |
-| [DB21-J2](https://get.duckietown.com/products/duckiebot-db21?variant=40700056830127)            	 | Jetson 2GB    	 | ✔️ Full Support 	    |
-
-
-
-### 🚙 Testing on a physical robot
-
-You can test your agent on the robot using the command,
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT
-
-This is the modality "everything runs on the robot".
-
-You can also test using
-
-    dts code workbench --duckiebot YOUR_DUCKIEBOT --local 
-
-This is the modality "drivers running on the robot, agent runs on the laptop."
-
-
-### 📽 Perform local evaluation
-
-We suggest you evaluate your work locally before submitting your solution.
-You can do so by running the following command,
-
-    dts code evaluate
-
-This should take a few minutes.
-This is not supposed to be an interactive process: just let it run, and when you return,
-you will find the output in a folder, including videos, and trajectories, and all the statistics
-you would usually find on the website.
-
-
-### 📬 Submit your solution
-
-When you are ready to submit your homework, use the following command,
-
-    dts code submit
-
-This will package all your code and send it to the Duckietown servers for evaluation.
-
-
-## Troubleshooting
-
-
-If an error of this form occurs
-
-```bash
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 76, in dt_challenges_cli_main
-    dt_challenges_cli_main_(args=args, sections=sections, main_cmd="challenges")
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli.py", line 203, in dt_challenges_cli_main_
-    f(rest, environment)
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cli_submit.py", line 165, in dt_challenges_cli_submit
-    br = submission_build(
-  File "/usr/local/lib/python3.8/dist-packages/duckietown_challenges_cli/cmd_submit_build.py", line 41, in submission_build
-    raise ZException(msg, available=list(credentials))
-zuper_commons.types.exceptions.ZException: Credentials for registry docker.io not available
-available:
-```
-
-you need to log into docker using `dts`. Use this command:
-
-```
-dts challenges config --docker-username <USERNAME> --docker-password <PASSWORD>
-```
-
-
-## Retire obsolete submissions
-
-Note that you can "retire" submissions that you know are wrong.
-You can do this through [the Duckietown Challenges website](https://challenges.duckietown.org/).
-
-To do so, login using your token, then find the submission you want to retire from the list of submission
-in your user profile page. Use the button "retire" to the right of the submission record line.
+**Author**: Nurlan Dadashbayli
